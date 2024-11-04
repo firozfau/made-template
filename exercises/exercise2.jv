@@ -65,4 +65,5 @@ valuetype TreesColumnId oftype text {
  
 constraint onlySpecificTextAllow on text: value matches /^Vogelsang.*/;
 
-constraint reformateThreeDigitValue on text: value matches /\b\d{1,3}\.\d+,\s?\d{1,3}\.\d+\b/;
+constraint reformateThreeDigitValue on text: value matches /^(\d{1,3}\.\d+), (\d{1,3}\.\d+)$/;
+
