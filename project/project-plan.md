@@ -45,8 +45,14 @@ This dataset provides detailed economic information across different regions of 
 <!-- Here is a sequentially ordered list of work packages, with each package linked to a detailed issue for further information.[ Just listed work issue which we made in github]-->
 
 1. [Dataset analysis and select based on project][i1]
+2. [Finalize Data Pipeline][i2]
+3. [Data Exploration and Cleaning][i3]
+4. [Update Project Documentation][i4]
 
 
 
 
 [i1]: https://github.com/firozfau/made-template/issues/1
+[i2]: https://github.com/firozfau/made-template/issues/2
+[i3]: https://github.com/firozfau/made-template/issues/3
+[i4]: https://github.com/firozfau/made-template/issues/4
