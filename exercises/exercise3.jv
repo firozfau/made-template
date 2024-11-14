@@ -1,0 +1,109 @@
+pipeline WorldBankPipeline {
+
+    // Bond Issuance data pipeline
+    WorldBankExtractor
+        -> WorldBankXLSXInterpreter
+        -> WorldBankSheetPicker
+        -> WorldBankHeaderWriter
+        -> WorldBankRangeSelector
+        -> WorldBankTableInterpreterGDP
+        -> WorldBankDatbaseLoaderGDP;
+
+    WorldBankRangeSelector  
+        -> WorldBankTableInterpreterBond
+        -> WorldBankDatbaseLoaderBond;
+
+
+
+    // call excel file from soruce 
+    block WorldBankExtractor oftype HttpExtractor {
+        url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
+    }
+
+
+    //XLSX file and transformed into a Workbook
+    block WorldBankXLSXInterpreter oftype XLSXInterpreter { } 
+
+
+    // select sheet number:
+    block WorldBankSheetPicker oftype SheetPicker {
+        sheetName: "Figure S5.1.2";
+    }
+
+    // select row range:
+    block WorldBankRangeSelector oftype CellRangeSelector {
+        select: range P2:S45;
+    }
+
+    // rewrite column based on range of column
+    block WorldBankHeaderWriter oftype CellWriter {
+        at: range P2:S2;  
+        write: [
+            "Country Code",
+            "Economy",
+            "GDP per Capita",
+            "Bond Issuance Share"
+        ];
+    }
+
+
+    block WorldBankTableInterpreterGDP oftype TableInterpreter {
+    header: true;
+    columns: [
+        "Country Code" oftype ValidateCountryCode,
+        "GDP per Capita" oftype ValidateGDPdata, 
+    ];
+}
+
+
+    block WorldBankTableInterpreterBond oftype TableInterpreter {
+    header: true;
+    columns: [
+        "Country Code" oftype ValidateCountryCode,
+        "Bond Issuance Share" oftype ValidateBondShare  
+    ];
+}
+
+
+
+    // Load data into SQLite
+
+    block WorldBankDatbaseLoaderGDP oftype SQLiteLoader {
+        table: "gdpPerCapita";
+        file: "./country-stats.sqlite";
+    }
+
+
+    block WorldBankDatbaseLoaderBond oftype SQLiteLoader {
+        table: "bondIssuance";
+        file: "./country-stats.sqlite";
+    }
+
+     
+}
+
+
+
+
+
+
+// Constraints set
+valuetype ValidateCountryCode oftype text {
+    constraints: [valid3DigitCode];
+}
+
+valuetype ValidateGDPdata oftype decimal {
+    constraints: [PositiveDecimal];
+}
+
+valuetype ValidateBondShare oftype decimal {
+    constraints: [PositveDecimalLimit];
+}
+
+ 
+// validation
+constraint valid3DigitCode on ValidateCountryCode: value matches /^[A-Za-z]{3}$/;
+
+constraint PositiveDecimal on ValidateGDPdata: value > 0;   
+
+constraint PositveDecimalLimit on ValidateBondShare: value >= 0 and value <= 1;
