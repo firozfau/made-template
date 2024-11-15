@@ -1,111 +1,83 @@
 import os
 import pandas as pd
 import sqlite3
-from kaggle.api.kaggle_api_extended import KaggleApi
 
+# Define paths
 DATA_DIR = "./data"
+MAIN_DB_PATH = os.path.join(DATA_DIR, "USAdatabase.db")
+CSV_FILE_PATH = os.path.join(DATA_DIR, "population_USA.csv")
+XLSX_FILE_PATH = os.path.join(DATA_DIR, "unemployed_reates_USA.xlsx")
 
-# Database name  set
-CLIMATE_DB_PATH = os.path.join(DATA_DIR, "climate_data.db")
-SALES_DB_PATH = os.path.join(DATA_DIR, "sales_data.db")
-MAIN_DB_PATH = os.path.join(DATA_DIR, "mainDatabase.db") # climate and sales both  data here.
-
-# dataset initialize (kaggle)
-DATASETS = {
-    "us_climate_regions": {
-        "kaggle_id": "zeeniye/us-climate-regions",
-        "file_name": "us_climate_regions.csv",
-        "db_path": CLIMATE_DB_PATH,
-        "table_name": "climate_regions"
-    },
-    "us_regional_sales_data": {
-        "kaggle_id": "talhabu/us-regional-sales-data",
-        "file_name": "US_Regional_Sales_Data.csv",
-        "db_path": SALES_DB_PATH,
-        "table_name": "regional_sales"
-    }
-}
-
-def download_dataset(kaggle_id, file_name):
-    api = KaggleApi()
-    api.authenticate()
-    print(f"Downloading {file_name} from Kaggle...")
-    try:
-        api.dataset_download_files(kaggle_id, path=DATA_DIR, unzip=True)
-        print(f"Successfully downloaded {file_name}")
-    except Exception as e:
-        print(f"Error downloading {file_name}: {e}")
-
-def load_data(file_path):
-    print(f"Loading data from {file_path}...")
-    if os.path.exists(file_path):
-        return pd.read_csv(file_path)
-    else:
-        print(f"File {file_path} not found.")
-        return pd.DataFrame()
-
-def transform_data(df):
-    if df.empty:
-        print("No data to transform.")
-        return df
-
-    print("Transforming data...")
+def load_population_data(csv_file):
+    """Load and process population data from CSV."""
+    columns_to_use = ["NAME", "POPESTIMATE2020", "POPESTIMATE2021", "POPESTIMATE2022", "POPESTIMATE2023"]
+    df = pd.read_csv(csv_file, usecols=columns_to_use, encoding='utf-8')
+    
+    # Rename columns
+    df.rename(columns={
+        "NAME": "state",
+        "POPESTIMATE2020": "2020",
+        "POPESTIMATE2021": "2021",
+        "POPESTIMATE2022": "2022",
+        "POPESTIMATE2023": "2023"
+    }, inplace=True)
+    
+    # Drop rows with null or empty values
     df.dropna(inplace=True)
-    df.drop_duplicates(inplace=True)
-    df.columns = [col.lower().replace(" ", "_") for col in df.columns]
+    df = df.replace("", pd.NA).dropna()
+    
     return df
 
-def create_main_database():
-    print(f"Creating main database at {MAIN_DB_PATH}...")
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
-    if not os.path.exists(MAIN_DB_PATH):
-        try:
-            with sqlite3.connect(MAIN_DB_PATH) as conn:
-                conn.execute("CREATE TABLE IF NOT EXISTS dummy (id INTEGER);")
-                print("mainDatabase.db successfully created.")
-        except Exception as e:
-            print(f"Error creating main database: {e}")
+def load_unemployment_data(xlsx_file):
+    """Load and process unemployment data from Excel."""
+    # Load the Excel file without a header for manual control
+    df = pd.read_excel(xlsx_file, engine='openpyxl', header=None)
+    
+    # Select rows A7 to A59 (index 6 to 58) and relevant columns
+    df = df.iloc[6:59, [0, 1, 4, 7, 10]]
+    
+    # Rename columns to lowercase for consistency
+    df.columns = ["state", "rate_2023", "rate_2022", "rate_2021", "rate_2020"]
+    
+    # Remove the first row if it contains "State" in the "state" column
+    if df.iloc[0]['state'].strip().lower() == 'state':
+        df = df.iloc[1:]
+    
+    # Convert rate columns to numeric
+    rate_columns = ["rate_2023", "rate_2022", "rate_2021", "rate_2020"]
+    df[rate_columns] = df[rate_columns].apply(pd.to_numeric, errors='coerce')
+    
+    # Drop rows with any NaN values
+    df.dropna(inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    
+    return df
 
-def save_to_sqlite(df, db_path, table_name):
-    if df.empty:
-        print(f"No data to save for {table_name}.")
-        return
-
-
-    print(f"Saving {table_name} to {db_path}...")
+def save_to_db(df, table_name, db_path):
+    """Save a DataFrame to an SQLite database with UTF-8 encoding."""
+    os.makedirs(DATA_DIR, exist_ok=True)
+    conn = sqlite3.connect(db_path)
+    conn.execute("PRAGMA encoding = 'UTF-8';")
     try:
-        conn = sqlite3.connect(db_path)
         df.to_sql(table_name, conn, if_exists='replace', index=False)
+        print(f"Table '{table_name}' created/updated successfully.")
+    except Exception as e:
+        print(f"Error saving to database: {e}")
+    finally:
         conn.close()
-    except Exception as e:
-        print(f"Error saving to {db_path}: {e}")
-
-    # Main database
-    print(f"Saving {table_name} to mainDatabase.db...")
-    try:
-        with sqlite3.connect(MAIN_DB_PATH) as conn_main:
-            df.to_sql(table_name, conn_main, if_exists='replace', index=False)
-        print(f"Successfully saved {table_name} to mainDatabase.db")
-    except Exception as e:
-        print(f"Error saving {table_name} to mainDatabase.db: {e}")
 
 def main():
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
-
-    create_main_database()
+    # Step 1: Load and process the population data
+    print("Processing population data...")
+    population_df = load_population_data(CSV_FILE_PATH)
+    save_to_db(population_df, "population_usa_2020_2023", MAIN_DB_PATH)
     
-    for key, value in DATASETS.items():
-        download_dataset(value["kaggle_id"], value["file_name"])
-        
-        df = load_data(os.path.join(DATA_DIR, value["file_name"]))
-        
-        df = transform_data(df)
-        
-        save_to_sqlite(df, value["db_path"], value["table_name"])
-
-    print("Congratulations, Data pipeline is successfully completed!")
+    # Step 2: Load and process the unemployment data
+    print("Processing unemployment data...")
+    unemployment_df = load_unemployment_data(XLSX_FILE_PATH)
+    save_to_db(unemployment_df, "unemployment_rates_usa_2020_2023", MAIN_DB_PATH)
+    
+    print("Data pipeline completed successfully.")
 
 if __name__ == "__main__":
     main()
