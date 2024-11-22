@@ -40,7 +40,7 @@ This dataset provides annual population estimates for U.S. states and regions fr
 
 This datasetdataset provides annual unemployment rates for U.S. states, focusing on the years 2020 to 2023. It includes historical data, allowing for trend analysis at the state level. The dataset is essential for understanding shifts in unemployment rates across the U.S. over recent years.
 
-## Updated and expected Work
+## Updated and expected Work of Comprehensive Analysis and Visualization of U.S. Population and Unemployment Data (2020–2023)
   * Kagel link: https://www.kaggle.com/code/firozfau/analysis-visualization
 
 
