@@ -40,6 +40,10 @@ This dataset provides annual population estimates for U.S. states and regions fr
 
 This datasetdataset provides annual unemployment rates for U.S. states, focusing on the years 2020 to 2023. It includes historical data, allowing for trend analysis at the state level. The dataset is essential for understanding shifts in unemployment rates across the U.S. over recent years.
 
+## Updated and expected Work
+  * Kagel link: https://www.kaggle.com/code/firozfau/analysis-visualization
+
+
 ## Work Packages
 <!-- Here is a sequentially ordered list of work packages, with each package linked to a detailed issue for further information.[ Just listed work issue which we made in github]-->
 
@@ -47,6 +51,13 @@ This datasetdataset provides annual unemployment rates for U.S. states, focusing
 2. [Finalize Data Pipeline][i2]
 3. [Data Exploration and Cleaning][i3]
 4. [Update Project Documentation][i4]
+5. [Data validation][i5]
+6. [Data analysis][i6]
+7. [Data report ][i7]
+8. [Data compare and merge ][i8]
+9. [Data visualization each dataset][i9]
+10. [Final data visualization ][i10]
+
 
 
 
@@ -55,3 +66,9 @@ This datasetdataset provides annual unemployment rates for U.S. states, focusing
 [i2]: https://github.com/firozfau/made-template/issues/2
 [i3]: https://github.com/firozfau/made-template/issues/3
 [i4]: https://github.com/firozfau/made-template/issues/4
+[i5]: https://github.com/firozfau/made-template/issues/5
+[i6]: https://github.com/firozfau/made-template/issues/6
+[i7]: https://github.com/firozfau/made-template/issues/7
+[i8]: https://github.com/firozfau/made-template/issues/8
+[i9]: https://github.com/firozfau/made-template/issues/9
+[i10]: https://github.com/firozfau/made-template/issues/10
