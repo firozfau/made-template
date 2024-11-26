@@ -5,7 +5,6 @@
  
 /data/*.db
  
-/project/data/*.csv
 /project/data/*.db
  
 __pycache__/
