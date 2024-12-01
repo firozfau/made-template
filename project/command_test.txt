@@ -1,0 +1,13 @@
+python3 -m venv venv
+
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+chmod +x tests.sh
+
+./tests.sh
+
+
+
+# python3 pipeline.py
