@@ -55,4 +55,4 @@ else
     exit 1
 fi
 
-echo "All system-level tests passed successfully."
+echo "Successfully passed all level test."
