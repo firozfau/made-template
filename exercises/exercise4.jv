@@ -42,8 +42,8 @@ pipeline MowestaDataPipeline {
  
     // rename J and K column
     block RenameJKcolumn oftype CellWriter {
-        at: range J1:K1;
-        write: ['battery_temperature','Geraet aktiv'];
+        at: cell J1;
+        write: ['battery_temperature'];
     }
     
      // convert Celsius to Fahrenheit 
@@ -78,8 +78,7 @@ pipeline MowestaDataPipeline {
             "model" oftype text,
             "month" oftype ValidMonth,
             "temperature" oftype decimal,
-            "battery_temperature" oftype decimal,
-             "Geraet aktiv" oftype text,
+            "battery_temperature" oftype decimal, 
         ];
     }
 
