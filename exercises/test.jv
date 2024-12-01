@@ -1,72 +1,105 @@
-pipeline TempBaterry
-{
-    block FileExtractor oftype HttpExtractor {url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip"; }
-    block ZipInterpreter oftype ArchiveInterpreter { archiveType: "zip";}
-    block DataPicker oftype FilePicker { path: "/data.csv";}
-    
-    block CSVInterpreter oftype CSVInterpreter {delimiter: ";"; }
-    block TextInterpreter oftype TextFileInterpreter {}
+pipeline MowestaDataPipeline {
 
-    block RenameTemperature oftype CellWriter {
-        at: cell E1;
-        write: ["Temperatur"]; 
+   
+
+     MowestaDataExtractor 
+        -> ZipFileInterpreter
+        -> CSVFilePicker
+        -> CSVFileInterpreter
+        -> CSVFileTextInterpreter
+        -> RenameAtoEcolumn
+        -> RenameJKcolumn
+        -> SQLiteSchemaDesign
+        -> TemperatureColumnTransformer 
+        -> BatteryTemperatureColumnTransformer
+        -> LoadSQLiteDatabase;
+
+  
+    block MowestaDataExtractor oftype HttpExtractor{
+        url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
     }
 
-    block RenameBatterietemperatur oftype CellWriter {
-        at: cell J1;
-        write: ["Batterietemperatur"]; 
-    }  
+    block ZipFileInterpreter oftype ArchiveInterpreter{
+        archiveType: "zip";
+    }
+   
+    block CSVFilePicker oftype FilePicker {
+        path: "/data.csv";
+    }
+    
+    block CSVFileInterpreter oftype TextFileInterpreter {}
+    
+ 
+    block CSVFileTextInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+    }
+  
+    block RenameAtoEcolumn oftype CellWriter {
+        at: range A1:E1;
+        write: ['id','producer','model','month','temperature'];
+    }
+ 
+    block RenameJKcolumn oftype CellWriter {
+        at: range J1:K1;
+        write: ['battery_temperature','Geraet aktiv'];
+    }
+    
+     
+    transform CelsiusToFahrenheit {
+        from TemperatureInCelcius oftype decimal;
+        to TemperatureInFahrenheit oftype decimal;
+        TemperatureInFahrenheit: ((TemperatureInCelcius * 9/5) + 32);
+    }
+    
+    block TemperatureColumnTransformer oftype TableTransformer {
+        inputColumns: ['temperature'];
+        outputColumn: 'temperature';
+        uses: CelsiusToFahrenheit;
+    }
+   
+    block BatteryTemperatureColumnTransformer oftype TableTransformer {
+        inputColumns: ['battery_temperature'];
+        outputColumn: 'battery_temperature';
+        uses: CelsiusToFahrenheit;
+    }
+    
+ 
 
-    block ColDeleter oftype ColumnDeleter { delete: [column F, column G, column H, column I]; }
-    block ColDataSelector oftype CellRangeSelector {select: range A1:K*;}
-
-
-    block TableDataInterpreter oftype TableInterpreter {
-        header: false;
+   
+    block SQLiteSchemaDesign oftype TableInterpreter {
+        header: true;
         columns: [
-            "Geraet" oftype integer, "Hersteller" oftype text, "Model" oftype text, "Monat" oftype integer,
-            "Temperatur" oftype decimal, "Batterietemperatur" oftype decimal, "Geraet aktiv" oftype text,
+            "id" oftype ValidID,
+            "producer" oftype text,
+            "model" oftype text,
+            "month" oftype ValidMonth,
+            "temperature" oftype decimal,
+            "battery_temperature" oftype decimal,
+             "Geraet aktiv" oftype text,
         ];
     }
-    
-    transform CelsiusToFahrenheit {
-   from tempCelsius oftype decimal;
-   to tempFahrenheit oftype decimal;
-   tempFahrenheit: (tempCelsius * 9/5) + 32;
-   }
+
+    // 12. Loads Table into SQLite Database
+    block LoadSQLiteDatabase oftype SQLiteLoader {
+        table: "temperatures";
+        file: "temperatures.sqlite";
+    }
+
+
+ // validation
+
+    valuetype ValidMonth oftype integer {
+            constraints: [RangeMonth];
+        }
+
+     valuetype ValidID oftype integer {
+        constraints: [ValidNumber];
+    }
+ 
+
+
+    constraint RangeMonth on ValidMonth: value >=1 and value <= 12;
+    constraint ValidNumber on ValidID: value >=1;  
    
-    block TempTransformerA oftype TableTransformer {
-   inputColumns: ['Temperatur'];
-   outputColumn: 'Temperatur';
-   use: CelsiusToFahrenheit;
-   }
-   block TempTransformerB oftype TableTransformer {
-   inputColumns: ['Batterietemperatur'];
-   outputColumn: 'Batterietemperatur';
-   use: CelsiusToFahrenheit;
-   }
-    constraint ValidGeraetRange oftype RangeConstraint {
-        lowerBound: 1;
-    }
-    valuetype ValidateGeraetRange oftype integer {constraints: [ ValidGeraetRange ];} 
 
-    block DBDataLoader oftype SQLiteLoader 
-    { 
-        table: "temperatures"; 
-        file: "./temperatures_test.sqlite"; 
-    }
-
-    FileExtractor
-    ->ZipInterpreter
-    ->DataPicker
-    ->TextInterpreter
-    ->CSVInterpreter
-    ->RenameTemperature
-    ->RenameBatterietemperatur
-    ->ColDataSelector
-    ->ColDeleter
-    ->TableDataInterpreter
-    ->TempTransformerA
-    ->TempTransformerB
-    ->DBDataLoader;
 }
