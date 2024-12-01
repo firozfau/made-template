@@ -1,0 +1,133 @@
+pipeline TempBatteryPipeline {
+
+
+    FileExtractor
+    -> ZipInterpreter
+    -> DataPicker
+    -> TextInterpreter
+    -> CSVInterpreter
+    -> RenameColumns
+    -> DataRangeSelector
+    -> TableInterpreter
+    -> TemperatureTransformer
+    -> BatteryTemperatureTransformer 
+    -> SQLiteDataLoader;
+
+
+    // Extract csv file from the  URL
+    block FileExtractor oftype HttpExtractor {
+        url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
+    }
+
+    // Unzip 
+    block ZipInterpreter oftype ArchiveInterpreter {
+        archiveType: "zip";
+    }
+
+    // CSV file
+    block DataPicker oftype FilePicker {
+        path: "/data.csv";
+    }
+
+    // Interpret text file
+    block TextInterpreter oftype TextFileInterpreter {}
+
+    // Interpret the CSV file
+    block CSVInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+    }
+
+    // Rename columns (A to k) and set range expected column
+    block RenameColumns oftype CellWriter {
+        at: range A1:K1;   
+        write: [
+            "id", 
+            "producer", 
+            "model", 
+            "month", 
+            "temperature", 
+            "Latitude (WGS84)", 
+            "Longitude (WGS84)", 
+            "Verschleierung (m)", 
+            "Aufenthaltsdauer im Freien (ms)", 
+            "battery_temperature",
+            "Geraet aktiv"
+        ];
+    }
+
+    //  column range
+    block DataRangeSelector oftype CellRangeSelector {
+        select: range A1:K*;   
+    }
+
+    // create table schema
+    block TableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "id" oftype PositiveIDNumberFun,
+            "producer" oftype text,
+            "model" oftype text,
+            "month" oftype text,
+            "temperature" oftype decimal,
+            "Latitude (WGS84)" oftype text, 
+            "Longitude (WGS84)" oftype text, 
+            "Verschleierung (m)" oftype integer, 
+            "Aufenthaltsdauer im Freien (ms)" oftype integer, 
+            "battery_temperature" oftype decimal,
+            "Geraet aktiv" oftype text
+        ];
+    }
+
+    // convert CelciousToFahrenheit
+    transform CelsiusToFahrenheit {
+        from tempCelsius oftype decimal;
+        to tempFahrenheit oftype decimal;
+        tempFahrenheit: (tempCelsius * 9/5) + 32;
+    }
+
+    block TemperatureTransformer oftype TableTransformer {
+        inputColumns: ["temperature"];
+        outputColumn: "temperature";
+        use: CelsiusToFahrenheit;
+    }
+
+    
+    block BatteryTemperatureTransformer oftype TableTransformer {
+        inputColumns: ["battery_temperature"];
+        outputColumn: "battery_temperature";
+        use: CelsiusToFahrenheit;
+    }
+  
+    // id should minimum 1
+    constraint ValidIDRange oftype RangeConstraint {
+        lowerBound: 1;
+    }
+
+    valuetype ValidateID oftype integer {
+        constraints: [ValidIDRange];
+    }
+
+    // create table with database
+    block SQLiteDataLoader oftype SQLiteLoader {
+        table: "temperatures";
+        file: "./temperatures.sqlite";
+    }
+
+   
+}
+
+
+
+
+// validation
+
+valuetype ValidtemperatureFun oftype text {
+    constraints: [Validtemperature];
+}
+valuetype PositiveIDNumberFun oftype integer {
+    constraints: [PositiveIDNumber];
+}
+
+
+constraint Validtemperature on ValidtemperatureFun: value matches /^[\d,.-]+$/;
+constraint PositiveIDNumber on PositiveIDNumberFun: value > 0;   
