@@ -23,22 +23,9 @@ jobs:
         python3 -m pip install --upgrade pip
         pip install -r project/requirements.txt
 
-    - name: Verify Data Directory
-      run: |
-        if [ ! -d "project/data" ]; then
-          echo "Data directory does not exist. Ensure local inputs are in 'project/data'."
-          exit 1
-        fi
-
     - name: Run Tests
       run: |
         chmod +x project/tests.sh
         ./project/tests.sh
-
-    - name: Cache Data Directory
-      uses: actions/cache@v3
-      with:
-        path: project/data
-        key: macos-project-data-${{ github.sha }}
-        restore-keys: |
-          macos-project-data-
+      env:
+        API_KEY: ${{ secrets.MADAPI }}

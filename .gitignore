@@ -1,13 +1,27 @@
- .DS_Store
- 
+# macOS system files
+.DS_Store
+
+# Ignore all files in data/ except for .gitkeep and mock files
 /data/*
 !/data/.gitkeep
- 
+!/data/population_USA.csv
+!/data/unemployed_reates_USA.xlsx
+
+# Ignore database files and SQLite files
 /data/*.db
- 
 /project/data/*.db
- 
+*.sqlite
+
+# Python cache and bytecode
 __pycache__/
 *.pyc
- 
+
+# Kaggle credentials
 kaggle.json
+
+# Environment variables file
+.env
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+.env
