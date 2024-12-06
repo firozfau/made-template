@@ -8,8 +8,7 @@
 !/data/unemployed_reates_USA.xlsx
 
 # Ignore database files and SQLite files
-/data/*.db
-/project/data/*.db
+/data/*.db 
 *.sqlite
 
 # Python cache and bytecode
