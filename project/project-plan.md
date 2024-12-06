@@ -56,7 +56,12 @@ This datasetdataset provides annual unemployment rates for U.S. states, focusing
 7. [Data report ][i7]
 8. [Data compare and merge ][i8]
 9. [Data visualization each dataset][i9]
-10. [Final data visualization ][i10]
+10.[Final data visualization ][i10]
+11.[Add Automated Tests for the Data Pipeline ][i11]
+12.[Add System-Test-Level Validation for the Data Pipeline][i12]
+13.[Improve Pipeline Documentation and Extend Tests][i13]
+14.[Create a Workflow File][i14]
+15.[Generate API Key for Actions Secrets and Variables][i15]
 
 
 
@@ -72,3 +77,8 @@ This datasetdataset provides annual unemployment rates for U.S. states, focusing
 [i8]: https://github.com/firozfau/made-template/issues/8
 [i9]: https://github.com/firozfau/made-template/issues/9
 [i10]: https://github.com/firozfau/made-template/issues/10
+[i11]: https://github.com/firozfau/made-template/issues/11
+[i12]: https://github.com/firozfau/made-template/issues/12
+[i13]: https://github.com/firozfau/made-template/issues/13
+[i14]: https://github.com/firozfau/made-template/issues/14
+[i15]: https://github.com/firozfau/made-template/issues/15

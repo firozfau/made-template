@@ -3,7 +3,7 @@ import pandas as pd
 import sqlite3
 
 # Paths
-DATA_DIR = "./project/data"
+DATA_DIR = "./data"
 CSV_FILE_PATH = os.path.join(DATA_DIR, "population_USA.csv")
 XLSX_FILE_PATH = os.path.join(DATA_DIR, "unemployed_reates_USA.xlsx")
 DB_FILE_PATH = os.path.join(DATA_DIR, "USAdatabase.db")
