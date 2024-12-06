@@ -4,10 +4,14 @@ source venv/bin/activate
 
 pip install -r requirements.txt
 
-chmod +x tests.sh
+ 
+ 
 
-./tests.sh
+# run only pipeline
+python3 ./project/pipeline.py
 
 
+# create DB / run auto tests
 
-# python3 pipeline.py
+command: chmod +x ./project/tests.sh
+command: ./project/tests.sh

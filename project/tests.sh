@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Ensure the environment is prepared
-if [ ! -d "./project/data" ]; then
-    mkdir -p "./project/data"
+if [ ! -d "./data" ]; then
+    mkdir -p "./data"
 fi
 
 # Run the pipeline
@@ -10,7 +10,7 @@ echo "Running pipeline.py..."
 python3 project/pipeline.py
 
 # Validate the database
-DB_FILE="./project/data/USAdatabase.db"
+DB_FILE="./data/USAdatabase.db"
 if [ -f "$DB_FILE" ]; then
     echo "Database file exists."
 else
