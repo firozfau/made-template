@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.12.4
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.12.4
+
+    - name: Install Dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install -r project/requirements.txt
+
+    - name: Verify Data Directory
+      run: |
+        if [ ! -d "project/data" ]; then
+          echo "Data directory does not exist. Ensure local inputs are in 'project/data'."
+          exit 1
+        fi
+
+    - name: Run Tests
+      run: |
+        chmod +x project/tests.sh
+        ./project/tests.sh
+
+    - name: Cache Data Directory
+      uses: actions/cache@v3
+      with:
+        path: project/data
+        key: macos-project-data-${{ github.sha }}
+        restore-keys: |
+          macos-project-data-
