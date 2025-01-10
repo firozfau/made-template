@@ -76,9 +76,3 @@ This datasetdataset provides annual unemployment rates for U.S. states, focusing
 [i7]: https://github.com/firozfau/made-template/issues/7
 [i8]: https://github.com/firozfau/made-template/issues/8
 [i9]: https://github.com/firozfau/made-template/issues/9
-[i10]: https://github.com/firozfau/made-template/issues/10
-[i11]: https://github.com/firozfau/made-template/issues/11
-[i12]: https://github.com/firozfau/made-template/issues/12
-[i13]: https://github.com/firozfau/made-template/issues/13
-[i14]: https://github.com/firozfau/made-template/issues/14
-[i15]: https://github.com/firozfau/made-template/issues/15
