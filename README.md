@@ -1,6 +1,6 @@
-# The Americas
+# <p align="center"> <b>Methods of Advanced Data Engineering</b> </p>
 
-## Projects with relation to North, Middle-, or South-America
+## 'The Americas' Projects with relation to North, Middle-, or South-America
 
 ### Project Context
 This project explores key issues related to North, Central, and South America. The specific analysis focuses on trends within the United States, particularly examining the relationship between population growth and unemployment rates over recent years.
@@ -137,24 +137,6 @@ To clone the repository to your local system:
    ```bash
    cd made-template
    ```
-
----
-
-### How to Fork the Repository
-
-Forking allows you to create a personal copy of the repository under your GitHub account:
-1. Log in to your [GitHub account](https://github.com/).
-2. Go to the repository page: [firozfau/made-template](https://github.com/firozfau/made-template).
-3. Click the **Fork** button in the top-right corner of the page.
-4. After forking, your copy of the repository will appear in your GitHub account.
-
-To work with your forked repository:
-1. Clone your forked repository to your local system:
-   ```bash
-   git clone git@github.com:<your-username>/made-template.git
-   ```
-2. Replace `<your-username>` with your GitHub username.
-
 ---
 
 
