@@ -105,7 +105,7 @@ ___
 [i19]: https://github.com/firozfau/made-template/blob/main/project/data_report.ipynb
 [i20]: https://github.com/firozfau/made-template/blob/main/project/pipeline.py
 [i21]: https://github.com/firozfau/made-template/blob/main/project/requirements.txt
-[i22]: https://github.com/firozfau/made-template/blob/main/project/requirements.txt
+[i22]: https://github.com/firozfau/made-template/blob/main/LICENSE.md
 
 
 
