@@ -1,4 +1,4 @@
-# <p align="center"> <b>Data Analysis Project License Agreement</b> </p>
+# <p align="center"> <b>License Agreement</b> </p>
 
 ## Copyright Information
 Copyright (c) 2004/2025 MD FIROZUR RAHMAN
