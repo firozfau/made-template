@@ -1,35 +1,36 @@
-# Project Plan
+# 📌 Advanced Data Engineering: Population Growth & Unemployment Analysis
 
-## Title
-<!-- Give your project a short title. -->
-Awesome MADE project.
+## 🔍 Project Overview
+This project explores key trends in North, Central, and South America, focusing on **population growth and unemployment rates** in the United States (2020–2023). The goal is to analyze correlations between demographic changes and labor market trends using real-world datasets.
 
-## Main Question
+## 📊 Datasets & Sources
+We will use the following datasets:
 
-<!-- Think about one main question you want to answer based on the data. -->
-1. Does writing an example question help students write better project plans?
+### 1️⃣ **U.S. Population Estimates (2020–2023)**
+- **Source:** United States Census Bureau
+- **Metadata URL:** [Census Metadata](https://www2.census.gov/programs-surveys/popest/datasets/2020-2023/state/totals/)
+- **Data URL:** [Population Data (CSV)](https://www2.census.gov/programs-surveys/popest/datasets/2020-2023/state/totals/NST-EST2023-ALLDATA.csv)
+- **Description:** Provides annual population estimates per state, including births, deaths, and migration trends.
 
-## Description
+### 2️⃣ **U.S. Unemployment Rates (2020–2023)**
+- **Source:** Department of Labor & Iowa State University
+- **Metadata URL:** [Labor Data](https://www.icip.iastate.edu/tables/employment/unemployment-states)
+- **Data URL:** [Unemployment Data (XLSX)](https://dlt.ri.gov/media/15101/download?language=en)
+- **Description:** Contains annual unemployment rates for each U.S. state, allowing for trend analysis.
 
-<!-- Describe your data science project in max. 200 words. Consider writing about why and how you attempt it. -->
-XY is an important problem, because... This projects analyzes XY, using method A. The results can give insights into...
+## 📅 Project Milestones
+| Phase | Task | Deliverable | Deadline |
+|-------|------|------------|----------|
+| **1** | Dataset Selection & Verification | Verify data integrity & completeness | 20-02-2025 |
+| **2** | Data Cleaning & Preprocessing | Handle missing values, standardize formats | 23-02-2025 |
+| **3** | Exploratory Data Analysis (EDA) | Identify trends, correlations, anomalies | 25-02-2025 |
+| **4** | Data Visualization | Generate visual insights | 28-02-2025 |
+| **5** | Pipeline Automation | Implement ETL pipeline with validation | 10-03-2025 |
+| **6** | Documentation & Reporting | Create final report & project summary | 15-03-2025 |
 
-## Datasources
+## ✅ Next Steps
+1. **Download & inspect** both datasets.
+2. **Verify structure, completeness, and validity.**
+3. **Refine project plan** based on initial findings.
+4. **Begin data preprocessing & exploration.**
 
-<!-- Describe each datasources you plan to use in a section. Use the prefic "DatasourceX" where X is the id of the datasource. -->
-
-### Datasource1: ExampleSource
-* Metadata URL: https://mobilithek.info/offers/-6901989592576801458
-* Data URL: https://raw.githubusercontent.com/od-ms/radverkehr-zaehlstellen/main/100035541/2019-01.csv
-* Data Type: CSV
-
-Short description of the DataSource.
-
-## Work Packages
-
-<!-- List of work packages ordered sequentially, each pointing to an issue with more details. -->
-
-1. Example Issue [#1][i1]
-2. ...
-
-[i1]: https://github.com/jvalue/made-template/issues/1
