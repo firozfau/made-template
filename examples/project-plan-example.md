@@ -21,12 +21,12 @@ We will use the following datasets:
 ## 📅 Project Milestones
 | Phase | Task | Deliverable | Deadline |
 |-------|------|------------|----------|
-| **1** | Dataset Selection & Verification | Verify data integrity & completeness | [Date] |
-| **2** | Data Cleaning & Preprocessing | Handle missing values, standardize formats | [Date] |
-| **3** | Exploratory Data Analysis (EDA) | Identify trends, correlations, anomalies | [Date] |
-| **4** | Data Visualization | Generate visual insights | [Date] |
-| **5** | Pipeline Automation | Implement ETL pipeline with validation | [Date] |
-| **6** | Documentation & Reporting | Create final report & project summary | [Date] |
+| **1** | Dataset Selection & Verification | Verify data integrity & completeness | 20-02-2025 |
+| **2** | Data Cleaning & Preprocessing | Handle missing values, standardize formats | 23-02-2025 |
+| **3** | Exploratory Data Analysis (EDA) | Identify trends, correlations, anomalies | 25-02-2025 |
+| **4** | Data Visualization | Generate visual insights | 28-02-2025 |
+| **5** | Pipeline Automation | Implement ETL pipeline with validation | 10-03-2025 |
+| **6** | Documentation & Reporting | Create final report & project summary | 15-03-2025 |
 
 ## ✅ Next Steps
 1. **Download & inspect** both datasets.
